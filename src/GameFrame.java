@@ -45,6 +45,7 @@ public class GameFrame extends JFrame {
             leftButtons[i].setBorder(BorderFactory.createEmptyBorder());
             leftButtons[i].setContentAreaFilled(false);
             leftButtons[i].setBounds(30, 30 + i * 75, 50, 50);
+            //
 
             settingsPanel.add(leftButtons[i]);
 
