@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.io.File;
 import javax.swing.*;
 
 public class GameFrame extends JFrame {
@@ -7,7 +6,7 @@ public class GameFrame extends JFrame {
     // Make buttons fields
     private JButton[] leftButtons = new JButton[5];
     private JButton[] rightButtons = new JButton[5];
-    private JButton startButton;
+    private JButton startButton = new JButton();
 
     GameFrame() {
         // 1. Frame title and icon
@@ -33,30 +32,51 @@ public class GameFrame extends JFrame {
     private void settings() {
         JPanel settingsPanel = new JPanel();
 
-        settingsPanel.setBackground(Color.blue);
+        settingsPanel.setBackground(Color.WHITE);
         this.add(settingsPanel);
         settingsPanel.setLayout(null);
         settingsPanel.setBounds(0, 0, 400, 600);
         
-        ImageIcon ArrowLeftBlack = new ImageIcon("assets/images/ArrowLeftBlack.jpg");
+        ImageIcon arrowLeftBlack = new ImageIcon("assets/images/ArrowLeftBlack.png");
+        Image scaledLeft = arrowLeftBlack.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon left = new ImageIcon(scaledLeft);
+
         for (int i = 0; i < leftButtons.length; i++) {
             leftButtons[i] = new JButton();
-            leftButtons[i].setIcon(ArrowLeftBlack);
+            leftButtons[i].setIcon(left);
             leftButtons[i].setBorder(BorderFactory.createEmptyBorder());
             leftButtons[i].setContentAreaFilled(false);
             leftButtons[i].setBounds(30, 30 + i * 75, 50, 50);
-            //
-
+            
             settingsPanel.add(leftButtons[i]);
 
-            /*
-             * leftButtons[i].addActionListener(new ActionListener() {
-             * 
-             * @Override
-             * public void actionPerformed(ActionEvent e) {
-             * //your actions
-             */
         }
-    }
 
+        ImageIcon arrowRightBlack = new ImageIcon("assets/images/ArrowRightBlack.png");
+        Image scaledRight = arrowRightBlack.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon right = new ImageIcon(scaledRight);
+
+        for (int i = 0; i < leftButtons.length; i++) {
+            rightButtons[i] = new JButton();
+            rightButtons[i].setIcon(right);
+            rightButtons[i].setBorder(BorderFactory.createEmptyBorder());
+            rightButtons[i].setContentAreaFilled(false);
+            rightButtons[i].setBounds(300, 30 + i * 75, 50, 50);
+
+            settingsPanel.add(rightButtons[i]);
+
+        }
+
+
+        ImageIcon start = new ImageIcon("assets/images/start.png");
+        Image scaledStart = start.getImage().getScaledInstance(210, 100, Image.SCALE_SMOOTH);
+        ImageIcon startImg = new ImageIcon(scaledStart);
+
+        settingsPanel.add(startButton);
+        startButton.setIcon(startImg);
+        startButton.setBorder(BorderFactory.createEmptyBorder());
+        startButton.setContentAreaFilled(false);
+        startButton.setBounds(85, 400, 210, 100);
+
+    }
 }
