@@ -4,8 +4,8 @@ import javax.swing.*;
 public class GameFrame extends JFrame {
 
     // Make buttons fields
-    private JButton[] leftButtons = new JButton[5];
-    private JButton[] rightButtons = new JButton[5];
+    private JButton[] leftButtons = new JButton[4];
+    private JButton[] rightButtons = new JButton[4];
     private JButton startButton = new JButton();
     int[] currentSettings = { 0, 0, 0, 0, 0 }; // default settings
 
@@ -95,13 +95,25 @@ public class GameFrame extends JFrame {
         startButton.setBorder(BorderFactory.createEmptyBorder());
         startButton.setContentAreaFilled(false);
         startButton.setBounds(85, 400, 210, 100);
-        startButton.addActionListener( 
+        startButton.addActionListener(
             (e) -> {
                 settingsPanel.setVisible(false); // Close the panel and start the game
                 setSize(1280, 720);
                 setLocationRelativeTo(null);
             }
         );
+
+
+       JButton buttonColorPicker = new JButton("Pick a color");
+       buttonColorPicker.addActionListener(
+           (e) -> {
+            JColorChooser colorChooser = new JColorChooser();
+               Color color = colorChooser.showDialog(null, "Pick a snake color", Color.black);
+           }
+        );
+
+       settingsPanel.add(buttonColorPicker);
+         buttonColorPicker.setBounds(125, 320, 150, 50);
 
     }
 }
