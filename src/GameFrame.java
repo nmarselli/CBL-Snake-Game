@@ -1,6 +1,5 @@
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
 
 public class GameFrame extends JFrame {
 
@@ -50,14 +49,14 @@ public class GameFrame extends JFrame {
             leftButtons[i].setBorder(BorderFactory.createEmptyBorder());
             leftButtons[i].setContentAreaFilled(false);
             leftButtons[i].setBounds(30, 30 + i * 75, 50, 50);
-            leftButtons[i].addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+            leftButtons[i].addActionListener(
+                (e) -> {
                     if (currentSettings[index] > 0) {
                         currentSettings[index]--;
                         System.out.println("Setting " + index + " changed to " + currentSettings[index]); // Temporary
                     }
                 }
-            });
+            );
 
             settingsPanel.add(leftButtons[i]);
 
@@ -74,14 +73,14 @@ public class GameFrame extends JFrame {
             rightButtons[i].setBorder(BorderFactory.createEmptyBorder());
             rightButtons[i].setContentAreaFilled(false);
             rightButtons[i].setBounds(300, 30 + i * 75, 50, 50);
-            rightButtons[i].addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+            rightButtons[i].addActionListener(
+                (e) -> {
                     if (currentSettings[index] < 5) {
                         currentSettings[index]++;
                         System.out.println("Setting " + index + " changed to " + currentSettings[index]); // Temporary
                     }
                 }
-            });
+            );
 
             settingsPanel.add(rightButtons[i]);
 
@@ -96,13 +95,13 @@ public class GameFrame extends JFrame {
         startButton.setBorder(BorderFactory.createEmptyBorder());
         startButton.setContentAreaFilled(false);
         startButton.setBounds(85, 400, 210, 100);
-        startButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+        startButton.addActionListener( 
+            (e) -> {
                 settingsPanel.setVisible(false); // Close the panel and start the game
                 setSize(1280, 720);
                 setLocationRelativeTo(null);
             }
-        });
+        );
 
     }
 }
