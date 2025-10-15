@@ -19,7 +19,7 @@ public class Snake {
     private ArrayList<Point> body; // List to hold the segments of the snake's body as coordinates
 
     // Constructor
-    public Snake(int startX, int startY, Color color) {
+    public Snake(int startX, int startY,int boardWidth, int boardHeight, Color color) {
         
         this.body = new ArrayList<>();
         // Initialize the body with the head position
@@ -40,7 +40,7 @@ public class Snake {
     public void move() {
         // Logic to move the snake
         Point head = body.get(0);
-        Point newHead = new Point(0, 0);
+        Point newHead;
 
         switch (direction) {
             case UP -> newHead = new Point(head.x, head.y + 1);
@@ -50,13 +50,29 @@ public class Snake {
             default -> newHead = new Point(head.x, head.y);
         }
         
-        body.add(newHead);
+        body.add(0, newHead);
         body.remove(body.size() - 1);
 
     }
     
+
+
     public void grow() {
         // Logic to grow the snake
+
+        Point head = body.get(0);
+        Point newHead;
+
+        switch (direction) {
+            case UP -> newHead = new Point(head.x, head.y + 1);
+            case DOWN -> newHead = new Point(head.x, head.y - 1);
+            case LEFT -> newHead = new Point(head.x - 1, head.y);
+            case RIGHT -> newHead = new Point(head.x + 1, head.y);
+            default -> newHead = new Point(head.x, head.y);
+        }
+        
+        body.add(0, newHead);
+
 
     }
 
@@ -80,21 +96,29 @@ public class Snake {
     /**
      * Checks if the snake has collided with itself or the boundaries.
      */
-    public boolean checkCollision() {
+    public boolean checkCollision(int boardHeight, int boardWidth) {
         // Logic to check for collisions
-        return checkSelfCollision() || checkBoundaryCollision();
+        return checkSelfCollision() || checkBoundaryCollision(boardHeight, boardWidth);
     }
 
     private boolean checkSelfCollision() {
         // Logic to check for self-collision
+        Point head = body.get(0);
+
+        for (int i = 1; i < body.size(); i++) {
+            if (head.equals(body.get(i))) {
+                return true;
+            }
+        }
 
         return false;
     }
 
-    private boolean checkBoundaryCollision() {
+    private boolean checkBoundaryCollision(int boardHeight, int boardWidth) {
         // Logic to check for boundary collision
+        Point head = body.get(0);
 
-        return false;
+        return (head.x < 0 || head.x >= boardWidth || head.y < 0 || head.y >= boardHeight);
     }
 
     // Getters and Setters
@@ -114,4 +138,7 @@ public class Snake {
         return (body.get(0));
     }
 
+    public ArrayList<Point> getBody() {
+        return body;
+    }
 }
