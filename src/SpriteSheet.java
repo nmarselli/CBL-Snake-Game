@@ -5,21 +5,14 @@ import java.util.List;
 
 public class SpriteSheet {
     private final BufferedImage sheet;
-    private final int tileW, tileH, margin, spacing;
+    private final int tileWidth;
     private final int cols, rows;
 
-    public SpriteSheet(BufferedImage sheet, int tileW, int tileH) {
-        this(sheet, tileW, tileH, 0, 0);
-    }
-
-    public SpriteSheet(BufferedImage sheet, int tileW, int tileH, int margin, int spacing) {
+    public SpriteSheet(BufferedImage sheet, int tileWidth) {
         this.sheet = sheet;
-        this.tileW = tileW;
-        this.tileH = tileH;
-        this.margin = margin;
-        this.spacing = spacing;
-        this.cols = (sheet.getWidth()  - 2*margin + spacing) / (tileW + spacing);
-        this.rows = (sheet.getHeight() - 2*margin + spacing) / (tileH + spacing);
+        this.tileWidth = tileWidth;
+        this.cols = sheet.getWidth() / tileWidth;
+        this.rows = sheet.getHeight() / tileWidth;
     }
 
     public int getCols() { return cols; }
@@ -27,11 +20,10 @@ public class SpriteSheet {
 
     /** Get subimage by grid coordinate (col, row), 0-based. */
     public BufferedImage get(int col, int row) {
-        if (col < 0 || col >= cols || row < 0 || row >= rows)
-            throw new IndexOutOfBoundsException("col/row out of range");
-        int x = margin + col * (tileW + spacing);
-        int y = margin + row * (tileH + spacing);
-        return sheet.getSubimage(x, y, tileW, tileH); // view backed by the sheet
+        //if (col < 0 || col >= cols || row < 0 || row >= rows) { throw new IndexOutOfBoundsException("col/row out of range");}
+        int x = col * tileWidth;
+        int y = row * tileWidth;
+        return sheet.getSubimage(x, y, tileWidth, tileWidth); // view backed by the sheet
     }
 
     /** Get by linear index (row-major). */
