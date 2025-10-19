@@ -33,7 +33,7 @@ public class SpriteDemo extends JPanel {
 
     private final List<BufferedImage> frames;
 
-    // quick glace through the tiles
+    // quick glace through the tiles / tick generator
     public SpriteDemo(List<BufferedImage> frames) {
         this.frames = frames;
         // new Timer(100, e -> {repaint();}).start();
