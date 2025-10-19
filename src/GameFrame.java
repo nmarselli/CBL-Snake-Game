@@ -10,6 +10,8 @@ public class GameFrame extends JFrame {
     int[] currentSettings = { 0, 0, 0, 0, 0 }; // default settings
     private Timer colorTimer;
     private float hue = 0f;
+    private GamePanel gamePanel;
+
 
     GameFrame() {
         // 1. Frame title and icon
@@ -104,20 +106,27 @@ public class GameFrame extends JFrame {
         startButton.setBounds(85, 400, 210, 100);
         startButton.addActionListener(
                 (e) -> {
-                    settingsPanel.setVisible(false); // Close the panel and start the game
+                    colorTimer.stop();
+                    settingsPanel.setVisible(false); // Turn visibiliy off the panel and start the game
                     setSize(1280, 720);
                     setLocationRelativeTo(null);
+                    gamePanel = new GamePanel();
+                    add(gamePanel);
+                    
                 });
 
         JButton buttonColorPicker = new JButton("Pick a color");
+        buttonColorPicker.setBackground(Color.BLACK);
+        buttonColorPicker.setBackground(Color.BLACK);
         buttonColorPicker.addActionListener(
                 (e) -> {
                     JColorChooser colorChooser = new JColorChooser();
                     Color color = colorChooser.showDialog(null, "Pick a snake color", Color.black);
+                    buttonColorPicker.setBackground(color);
                 });
 
         settingsPanel.add(buttonColorPicker);
-        buttonColorPicker.setBounds(125, 320, 150, 50);
+        buttonColorPicker.setBounds(115, 320, 150, 50);
 
         
             

@@ -8,11 +8,6 @@ import java.util.*;
 
 public class Snake { 
 
-    // Direction enum
-    public enum Direction {
-        UP, DOWN, LEFT, RIGHT
-    }
-
     private Direction direction;
     private Direction nextDirection;
     private Color color;
@@ -124,6 +119,10 @@ public class Snake {
     // Getters and Setters
     public Direction getDirection() {
         return direction;
+    }
+
+    public void setNextDirection(Direction nextDirection) {
+        this.nextDirection = nextDirection;
     }
 
     public Color getColor() {
