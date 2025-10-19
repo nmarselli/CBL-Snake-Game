@@ -9,12 +9,13 @@ import java.util.*;
 public class Snake { 
 
     private Direction direction;
-    private Direction nextDirection;
     private Color color;
-    private ArrayList<Point> body; // List to hold the segments of the snake's body as coordinates
+    private final ArrayList<Point> body; 
 
-    // Constructor
-    public Snake(int startX, int startY,int boardWidth, int boardHeight, Color color) {
+    /**
+     * Constructor.
+     */ 
+    public Snake(int startX, int startY, int boardWidth, int boardHeight, Color color) {
         
         this.body = new ArrayList<>();
         // Initialize the body with the head position
@@ -23,8 +24,6 @@ public class Snake {
         this.body.add(new Point(startX - 2, startY));
 
         this.direction = Direction.RIGHT; // Default direction
-        this.nextDirection = Direction.RIGHT; // Default next direction
-
         this.color = color;
     }
     
@@ -38,8 +37,8 @@ public class Snake {
         Point newHead;
 
         switch (direction) {
-            case UP -> newHead = new Point(head.x, head.y + 1);
-            case DOWN -> newHead = new Point(head.x, head.y - 1);
+            case UP -> newHead = new Point(head.x, head.y - 1);
+            case DOWN -> newHead = new Point(head.x, head.y + 1);
             case LEFT -> newHead = new Point(head.x - 1, head.y);
             case RIGHT -> newHead = new Point(head.x + 1, head.y);
             default -> newHead = new Point(head.x, head.y);
@@ -51,7 +50,9 @@ public class Snake {
     }
     
 
-
+    /**
+     * Grows the snake by adding a new segment at its head.
+     */
     public void grow() {
         // Logic to grow the snake
 
@@ -75,17 +76,20 @@ public class Snake {
      * Changes the direction of the snake,
      * if the new direction is not opposite to the current direction.
      */
-    public void changeDirection(Direction newDirection) {
-        if (!isOppositeDirection(newDirection)) {
-            direction = newDirection;
+    public void changeDirection(Direction nextDirection) {
+        if (!isOppositeDirection(nextDirection)) {
+            direction = nextDirection;
         }
     }
 
-    private boolean isOppositeDirection(Direction newDirection) {
-        return (this.direction == Direction.UP && newDirection == Direction.DOWN) 
-            || (this.direction == Direction.DOWN && newDirection == Direction.UP) 
-            || (this.direction == Direction.LEFT && newDirection == Direction.RIGHT) 
-            || (this.direction == Direction.RIGHT && newDirection == Direction.LEFT);
+    private boolean isOppositeDirection(Direction nextDirection) {
+        return switch (this.direction) {
+            case UP -> nextDirection == Direction.DOWN;
+            case DOWN -> nextDirection == Direction.UP;
+            case LEFT -> nextDirection == Direction.RIGHT;
+            case RIGHT -> nextDirection == Direction.LEFT;
+            default -> false;
+        };
     }
 
     /**
@@ -119,10 +123,6 @@ public class Snake {
     // Getters and Setters
     public Direction getDirection() {
         return direction;
-    }
-
-    public void setNextDirection(Direction nextDirection) {
-        this.nextDirection = nextDirection;
     }
 
     public Color getColor() {

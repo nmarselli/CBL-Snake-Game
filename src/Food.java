@@ -1,16 +1,19 @@
 import java.awt.*;
 import java.util.*;
 
+/**
+ * Represents the food on the game board, storing its position and providing
+ * methods to generate and respawn the food without colliding with the snake.
+ */
 public class Food {
 
     private Point position;
-    private Random random;
-    Snake snake;
+    private final Random random;
 
-    /*  Constructor
+    /**  
+     * Constructor.
      */
     public Food(int boardWidth, int boardLength) {
-        snake = new Snake(0, 0, boardWidth, boardLength, Color.BLACK);
         this.random = new Random();
         this.position = generateRandomPosition(boardWidth, boardLength);
     }
@@ -27,7 +30,7 @@ public class Food {
     }
 
 
-    /*
+    /**
      * Respawns food at new random position, does not allow food to spawn on snake body.
      */
     public void respawn(int boardWidth, int boardLength, Snake snake) {

@@ -1,7 +1,9 @@
+/** 
+ * Main.
+ */
 public class Main {
-
     public static void main(String[] args) {
-        // new GameFrame();
-        SpriteDemo.animator();
+        new GameFrame();
+        //Background.caller();
     }
 }

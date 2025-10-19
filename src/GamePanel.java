@@ -4,7 +4,8 @@ import java.awt.event.KeyListener;
 import javax.swing.*;
 
 /**
- * GamePanel is the main panel for the Snake game, handling key and action events.
+ * GamePanel is the main panel for the Snake game, handling key and action
+ * events.
  */
 public class GamePanel extends JPanel implements KeyListener {
 
@@ -15,57 +16,109 @@ public class GamePanel extends JPanel implements KeyListener {
     private final Snake snake;
     private final Food food;
 
+    private final Timer gameTimer;
+    private boolean isGameOver = false;
+
     /**
-     * Constructs a new GamePanel, 
+     * Constructs a new GamePanel,
      * Initializes the snake and food objects, and sets up panel properties.
      */
-    
+
     GamePanel() {
         // Constructor logic here
 
-        setBounds(0, 0, BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE);
-        setBackground(Color.BLACK);
+        //setBounds(0, 0, BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE);
+        setSize(new Dimension(BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE));
+        setBackground(Color.white);
 
         setFocusable(true);
         addKeyListener(this);
-        
+
         setLayout(null);
         setVisible(true);
 
-        //Initialize game objects
+        // Initialize game objects
         snake = new Snake(BOARD_WIDTH / 2, BOARD_HEIGHT / 2, BOARD_WIDTH, BOARD_HEIGHT,
-            Color.GREEN);
+                Color.GREEN);
         food = new Food(BOARD_WIDTH, BOARD_HEIGHT);
+
+        // Set up game timer
+        gameTimer = new Timer(100, e -> {
+            if (!isGameOver) {
+                gameLoop();
+            }
+        });
+
+        gameTimer.start();
     }
 
-    
+    private void gameLoop() {
+        // Game loop logic here
+        if (food.isEaten(snake)) {
+            snake.grow();
+            food.respawn(BOARD_WIDTH, BOARD_HEIGHT, snake);
+        } else {
+            snake.move();
+        }
+
+        if (snake.checkCollision(BOARD_HEIGHT, BOARD_WIDTH)) {
+            isGameOver = true;
+            gameTimer.stop();
+            JOptionPane.showMessageDialog(this, "Game Over!");
+        }
+        repaint();
+    }
+
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        drawFood(g2d);
+
+        drawSnake(g2d);
+    }
+
+    private void drawSnake(Graphics2D g2d) {
+        g2d.setColor(Color.BLUE);
+        for (Point segment : snake.getBody()) {
+            g2d.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        }
+    }
+
+    private void drawFood(Graphics2D g2d) {
+        g2d.setColor(Color.RED);
+        g2d.fillOval(food.getPosition().x * CELL_SIZE,
+                food.getPosition().y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
         switch (e.getKeyChar()) {
-            case 'w', 'W' -> snake.setNextDirection(Direction.UP);
-            case 's', 'S' -> snake.setNextDirection(Direction.DOWN);
-            case 'a', 'A' -> snake.setNextDirection(Direction.LEFT);
-            case 'd', 'D' -> snake.setNextDirection(Direction.RIGHT);
-            default -> snake.setNextDirection(snake.getDirection());
+            case 'w', 'W' -> {
+                snake.changeDirection(Direction.UP);
+                System.out.println("Up key pressed");
+            }
+            case 's', 'S' -> {
+                snake.changeDirection(Direction.DOWN);
+                System.out.println("Down key pressed");
+            }
+            case 'a', 'A' -> {
+                snake.changeDirection(Direction.LEFT);
+                System.out.println("Left key pressed");
+            }
+            case 'd', 'D' -> {
+                snake.changeDirection(Direction.RIGHT);
+                System.out.println("Right key pressed");
+            }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-        switch (e.getKeyChar()) {
-            case 'w', 'W' -> snake.setNextDirection(Direction.UP);
-            case 's', 'S' -> snake.setNextDirection(Direction.DOWN);
-            case 'a', 'A' -> snake.setNextDirection(Direction.LEFT);
-            case 'd', 'D' -> snake.setNextDirection(Direction.RIGHT);
-            default -> snake.setNextDirection(snake.getDirection());
-        }
-    }  
-} 
+    }
+}

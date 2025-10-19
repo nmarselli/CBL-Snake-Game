@@ -1,18 +1,26 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class GameFrame extends JFrame {
+/**
+ * GameFrame class that sets up the UI.
+ * Calls for the BackgroundPanel and Snake.
+ */
+
+public final class GameFrame extends JFrame {
 
     // Make buttons fields
-    private JButton[] leftButtons = new JButton[4];
-    private JButton[] rightButtons = new JButton[4];
-    private JButton startButton = new JButton();
+    private final JButton[] leftButtons = new JButton[4];
+    private final JButton[] rightButtons = new JButton[4];
+    private final JButton startButton = new JButton();
     int[] currentSettings = { 0, 0, 0, 0, 0 }; // default settings
     private Timer colorTimer;
     private float hue = 0f;
     private GamePanel gamePanel;
 
-
+    /**
+     * Constructor for GameFrame.
+     * Sets up the frame properties and calls for settings panel.
+     */
     GameFrame() {
         // 1. Frame title and icon
         setTitle("Snake");
@@ -34,9 +42,12 @@ public class GameFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Renders the settings panel.
+     * Adds buttons, to change settings and start the game.
+     */
     public void settings() {
         JPanel settingsPanel = new JPanel();
- 
 
         this.add(settingsPanel);
         settingsPanel.setLayout(null);
@@ -44,7 +55,9 @@ public class GameFrame extends JFrame {
 
         colorTimer = new Timer(50, e -> {
             hue += 0.01f;
-            if (hue > 1f) hue = 0f;
+            if (hue > 1f) {
+                hue = 0f;
+            }
             settingsPanel.setBackground(Color.getHSBColor(hue, 0.6f, 0.9f));
         });
         colorTimer.start();
@@ -64,7 +77,9 @@ public class GameFrame extends JFrame {
                     (e) -> {
                         if (currentSettings[index] > 0) {
                             currentSettings[index]--;
-                            System.out.println("Setting " + index + " changed to " + currentSettings[index]); // Temporary
+                            System.out.println("Setting " + index
+                                    + " changed to " + currentSettings[index]); // Temporary
+
                         }
                     });
 
@@ -73,7 +88,8 @@ public class GameFrame extends JFrame {
         }
 
         ImageIcon arrowRightBlack = new ImageIcon("assets/images/ArrowRightBlack.png");
-        Image scaledRight = arrowRightBlack.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        Image scaledRight = arrowRightBlack.getImage().getScaledInstance(
+                50, 50, Image.SCALE_SMOOTH);
         ImageIcon right = new ImageIcon(scaledRight);
 
         for (int i = 0; i < leftButtons.length; i++) {
@@ -87,7 +103,8 @@ public class GameFrame extends JFrame {
                     (e) -> {
                         if (currentSettings[index] < 5) {
                             currentSettings[index]++;
-                            System.out.println("Setting " + index + " changed to " + currentSettings[index]); // Temporary
+                            System.out.println("Setting " + index
+                                    + " changed to " + currentSettings[index]); // Temporary
                         }
                     });
 
@@ -107,12 +124,19 @@ public class GameFrame extends JFrame {
         startButton.addActionListener(
                 (e) -> {
                     colorTimer.stop();
-                    settingsPanel.setVisible(false); // Turn visibiliy off the panel and start the game
-                    setSize(1280, 720);
-                    setLocationRelativeTo(null);
+                    // Turn visibiliy off the panel and start the game
+                    settingsPanel.setVisible(false);
+
                     gamePanel = new GamePanel();
                     add(gamePanel);
                     
+                    setSize(1240, 900);
+                    setLocationRelativeTo(null);
+                    
+                    
+
+                    gamePanel.requestFocusInWindow();
+
                 });
 
         JButton buttonColorPicker = new JButton("Pick a color");
@@ -128,7 +152,5 @@ public class GameFrame extends JFrame {
         settingsPanel.add(buttonColorPicker);
         buttonColorPicker.setBounds(115, 320, 150, 50);
 
-        
-            
     }
 }
