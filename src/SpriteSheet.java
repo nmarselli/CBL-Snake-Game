@@ -1,6 +1,9 @@
 import java.awt.image.BufferedImage;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 /**
  * Creates the Spritesheet class.
@@ -60,5 +63,18 @@ public class SpriteSheet {
             }
         }
         return list;
+    }
+    /**
+     * Get image sheet from path.
+     */
+    public static BufferedImage getPicture(String path) {
+        try {
+            Path p = Paths.get(path);
+            BufferedImage sheet1 = ImageIO.read(p.toFile());
+            return sheet1;
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

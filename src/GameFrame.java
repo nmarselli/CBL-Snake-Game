@@ -127,16 +127,14 @@ public final class GameFrame extends JFrame {
                     // Turn visibiliy off the panel and start the game
                     settingsPanel.setVisible(false);
 
+                    JLayeredPane layers = new JLayeredPane();
+                    layers.add(new Background(), Integer.valueOf(0));
                     gamePanel = new GamePanel();
-                    add(gamePanel);
-                    
-                    setSize(1240, 900);
-                    setLocationRelativeTo(null);
-                    
-                    
-
+                    layers.add(gamePanel, Integer.valueOf(1));
                     gamePanel.requestFocusInWindow();
-
+                    setSize(976, 998);
+                    setLocationRelativeTo(null);
+                    setContentPane(layers);
                 });
 
         JButton buttonColorPicker = new JButton("Pick a color");

@@ -1,16 +1,15 @@
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.nio.file.*;
-import java.util.List;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
  * Loads the background, using tiles form the Spritesheet.
  */
 public class Background extends JPanel {
+    private java.util.List<BufferedImage> tileList = new java.util.ArrayList<>();
+    int[][] tiles = new int[15][15];
 
     @Override
     protected void paintComponent(Graphics g0) {
@@ -18,16 +17,15 @@ public class Background extends JPanel {
         Graphics2D g = (Graphics2D) g0;
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-        // Draw current frame scaled 4x at center
+        // Draw each tile
         for (int i = 0; i < 15; i++) {
             BufferedImage f;
             for (int j = 0; j < 15; j++) {
                 if (i % 2 == 0 && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
-                    f = frames.get(new Random().nextInt(16));
+                    f = tileList.get(tiles[i][j]);
                 } else {
-                    f = color(0.85, 0.85, 0.85, frames.get(new Random().nextInt(24)));
+                    f = color(0.85, 0.85, 0.85, tileList.get(tiles[i][j]));
                 }
-                System.out.println("Frame " + i);
                 int scale = 2;
                 int x = i * f.getWidth() * scale;
                 int y = j * f.getHeight() * scale;
@@ -36,51 +34,32 @@ public class Background extends JPanel {
         }
     }
 
-    private final List<BufferedImage> frames;
-
     /**
-     * Quick glace through the tiles / tick generator.
+     * Sets up the background panel.
+     * Calls to get the spritesheet and slices it into tiles.
      */
-    public Background(List<BufferedImage> frames) {
-        this.frames = frames;
-        // new Timer(100, e -> {repaint();}).start();
-        repaint();
-    }
-
-    /**
-     * Handeles the file search.
-     * Calls for the background display.
-     */
-    public static void caller() {
-        try {
-            // 1. Load the spritesheet image
-            Path p = Paths.get("assets/images/TileSet2.png");
-            BufferedImage sheet = ImageIO.read(p.toFile());
-
-            // 2. Create the Spritesheet object
-            SpriteSheet ss = new SpriteSheet(sheet, 32);
-
-            // Temporary - glance through all the tiles
-            java.util.List<BufferedImage> glance = new java.util.ArrayList<>();
+    public Background() {
+        setSize(976, 998);
+            //Load spritesheet and create an object, slices it into tiles
+            SpriteSheet ss = new SpriteSheet(SpriteSheet.getPicture("assets/images/TileSet2.png"), 32);
+            // Adds all tiles to a list
+            tileList.clear();
             for (int r = 0; r < ss.getRows(); r++) {
                 for (int c = 0; c < ss.getCols(); c++) {
-                    glance.add(ss.get(c, r));
+                    tileList.add(ss.get(c, r));
                 }
             }
-
-            // 3. Display
-            SwingUtilities.invokeLater(() -> {
-                JFrame f = new JFrame("Sprite Demo");
-                f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                f.setPreferredSize(new Dimension(976, 998));
-                f.setContentPane(new Background(glance));
-                f.pack();
-                f.setLocationRelativeTo(null);
-                f.setVisible(true);
-            });
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+        //new Timer(100, e -> {repaint();setSize(976, 998);}).start();
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles.length; j++) {
+                if (i % 2 == 0 && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
+                    tiles[i][j] = new Random().nextInt(16);
+                } else {
+                tiles[i][j] = new Random().nextInt(24);
+                }
+            }
         }
+        this.repaint();
     }
 
     /**

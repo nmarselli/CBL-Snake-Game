@@ -1,23 +1,24 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import javax.swing.*;
 
 /**
  * GamePanel is the main panel for the Snake game, handling key and action
  * events.
  */
-public class GamePanel extends JPanel implements KeyListener {
+public class GamePanel extends JPanel {
 
-    private static final int BOARD_WIDTH = 20;
-    private static final int BOARD_HEIGHT = 20;
-    private static final int CELL_SIZE = 25;
+    private static final int BOARD_WIDTH = 15;
+    private static final int BOARD_HEIGHT = 15;
+    private static final int CELL_SIZE = 64;
 
     private final Snake snake;
     private final Food food;
 
     private final Timer gameTimer;
     private boolean isGameOver = false;
+    private boolean canMove = true;
+    private int frame = 0;
 
     /**
      * Constructs a new GamePanel,
@@ -26,16 +27,15 @@ public class GamePanel extends JPanel implements KeyListener {
 
     GamePanel() {
         // Constructor logic here
-
-        //setBounds(0, 0, BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE);
         setSize(new Dimension(BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE));
-        setBackground(Color.white);
+        setOpaque(false);
 
         setFocusable(true);
-        addKeyListener(this);
 
         setLayout(null);
         setVisible(true);
+        requestFocusInWindow();
+        setupKeyBindings();
 
         // Initialize game objects
         snake = new Snake(BOARD_WIDTH / 2, BOARD_HEIGHT / 2, BOARD_WIDTH, BOARD_HEIGHT,
@@ -46,6 +46,7 @@ public class GamePanel extends JPanel implements KeyListener {
         gameTimer = new Timer(100, e -> {
             if (!isGameOver) {
                 gameLoop();
+                frame++;
             }
         });
 
@@ -54,6 +55,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     private void gameLoop() {
         // Game loop logic here
+        canMove = true;
         if (food.isEaten(snake)) {
             snake.grow();
             food.respawn(BOARD_WIDTH, BOARD_HEIGHT, snake);
@@ -66,17 +68,22 @@ public class GamePanel extends JPanel implements KeyListener {
             gameTimer.stop();
             JOptionPane.showMessageDialog(this, "Game Over!");
         }
-        repaint();
+        this.repaint();
     }
 
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 
         drawFood(g2d);
 
         drawSnake(g2d);
+
+        g2d.dispose();
     }
 
     private void drawSnake(Graphics2D g2d) {
@@ -87,38 +94,61 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     private void drawFood(Graphics2D g2d) {
-        g2d.setColor(Color.RED);
-        g2d.fillOval(food.getPosition().x * CELL_SIZE,
-                food.getPosition().y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
+                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10)/4),
+                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10)),
+                CELL_SIZE * 3 / 4, CELL_SIZE * 3 / 4, null);
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    private void setupKeyBindings() {
+        InputMap im = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = getActionMap();
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyChar()) {
-            case 'w', 'W' -> {
-                snake.changeDirection(Direction.UP);
-                System.out.println("Up key pressed");
-            }
-            case 's', 'S' -> {
-                snake.changeDirection(Direction.DOWN);
-                System.out.println("Down key pressed");
-            }
-            case 'a', 'A' -> {
-                snake.changeDirection(Direction.LEFT);
-                System.out.println("Left key pressed");
-            }
-            case 'd', 'D' -> {
-                snake.changeDirection(Direction.RIGHT);
-                System.out.println("Right key pressed");
-            }
-        }
-    }
+        // WASD & Arrow keys
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "up");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "down");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "right");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "down");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right");
 
-    @Override
-    public void keyReleased(KeyEvent e) {
+        am.put("up", new AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (canMove) {
+                    snake.changeDirection(Direction.UP);
+                    canMove = false;
+                }
+            }
+        });
+        am.put("left", new AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (canMove) {
+                    snake.changeDirection(Direction.LEFT);
+                    canMove = false;
+                }
+            }
+        });
+        am.put("down", new AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (canMove) {
+                    snake.changeDirection(Direction.DOWN);
+                    canMove = false;
+                }
+            }
+        });
+        am.put("right", new AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (canMove) {
+                    snake.changeDirection(Direction.RIGHT);
+                    canMove = false;
+                }
+            }
+        });
     }
 }
