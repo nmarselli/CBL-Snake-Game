@@ -20,12 +20,17 @@ public class GamePanel extends JPanel {
     private boolean canMove = true;
     private int frame = 0;
 
+    ImageIcon deathIcon = new ImageIcon("assets/images/DeathIcon.png");
+    Image image = deathIcon.getImage();
+    Image scaled = image.getScaledInstance(1000, 1000, Image.SCALE_SMOOTH); // width, height, scale type
+    ImageIcon scaledDeathIcon = new ImageIcon(scaled);
+
     /**
      * Constructs a new GamePanel,
      * Initializes the snake and food objects, and sets up panel properties.
      */
 
-    GamePanel() {
+    GamePanel(Color snakeColor) {
         // Constructor logic here
         setSize(new Dimension(BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE));
         setOpaque(false);
@@ -39,11 +44,11 @@ public class GamePanel extends JPanel {
 
         // Initialize game objects
         snake = new Snake(BOARD_WIDTH / 2, BOARD_HEIGHT / 2, BOARD_WIDTH, BOARD_HEIGHT,
-                Color.GREEN);
+                snakeColor);
         food = new Food(BOARD_WIDTH, BOARD_HEIGHT);
 
         // Set up game timer
-        gameTimer = new Timer(100, e -> {
+        gameTimer = new Timer(150, e -> {
             if (!isGameOver) {
                 gameLoop();
                 frame++;
@@ -66,7 +71,19 @@ public class GamePanel extends JPanel {
         if (snake.checkCollision(BOARD_HEIGHT, BOARD_WIDTH)) {
             isGameOver = true;
             gameTimer.stop();
-            JOptionPane.showMessageDialog(this, "Game Over!");
+
+
+            int choice = JOptionPane.showConfirmDialog(this,
+                "Game Over! Score: " + (snake.getBody().size() - 3) + "\nPlay again?", "Game Over",
+                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, scaledDeathIcon
+            );
+            if (choice == JOptionPane.YES_OPTION) {
+                Window window = SwingUtilities.getWindowAncestor(this);
+                window.dispose();
+                new GameFrame();
+            } else {
+                System.exit(0);
+            }
         }
         this.repaint();
     }
@@ -87,7 +104,7 @@ public class GamePanel extends JPanel {
     }
 
     private void drawSnake(Graphics2D g2d) {
-        g2d.setColor(Color.BLUE);
+        g2d.setColor(snake.getColor());
         for (Point segment : snake.getBody()) {
             g2d.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         }
@@ -95,8 +112,8 @@ public class GamePanel extends JPanel {
 
     private void drawFood(Graphics2D g2d) {
         g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
-                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10)/4),
-                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10)),
+                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
+                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
                 CELL_SIZE * 3 / 4, CELL_SIZE * 3 / 4, null);
     }
 

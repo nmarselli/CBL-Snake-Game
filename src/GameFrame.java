@@ -16,6 +16,7 @@ public final class GameFrame extends JFrame {
     private Timer colorTimer;
     private float hue = 0f;
     private GamePanel gamePanel;
+    private Color selectedSnakeColor = Color.GREEN;
 
     /**
      * Constructor for GameFrame.
@@ -129,7 +130,7 @@ public final class GameFrame extends JFrame {
 
                     JLayeredPane layers = new JLayeredPane();
                     layers.add(new Background(), Integer.valueOf(0));
-                    gamePanel = new GamePanel();
+                    gamePanel = new GamePanel(selectedSnakeColor);
                     layers.add(gamePanel, Integer.valueOf(1));
                     gamePanel.requestFocusInWindow();
                     setSize(976, 998);
@@ -138,13 +139,15 @@ public final class GameFrame extends JFrame {
                 });
 
         JButton buttonColorPicker = new JButton("Pick a color");
-        buttonColorPicker.setBackground(Color.BLACK);
-        buttonColorPicker.setBackground(Color.BLACK);
+        buttonColorPicker.setBackground(selectedSnakeColor);
         buttonColorPicker.addActionListener(
                 (e) -> {
                     JColorChooser colorChooser = new JColorChooser();
-                    Color color = colorChooser.showDialog(null, "Pick a snake color", Color.black);
-                    buttonColorPicker.setBackground(color);
+                    Color color = colorChooser.showDialog(null, "Pick a snake color", selectedSnakeColor );
+                    if (color != null) {
+                        selectedSnakeColor = color;
+                        buttonColorPicker.setBackground(selectedSnakeColor);
+                    }
                 });
 
         settingsPanel.add(buttonColorPicker);

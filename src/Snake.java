@@ -60,8 +60,8 @@ public class Snake {
         Point newHead;
 
         switch (direction) {
-            case UP -> newHead = new Point(head.x, head.y + 1);
-            case DOWN -> newHead = new Point(head.x, head.y - 1);
+            case UP -> newHead = new Point(head.x, head.y - 1);
+            case DOWN -> newHead = new Point(head.x, head.y + 1);
             case LEFT -> newHead = new Point(head.x - 1, head.y);
             case RIGHT -> newHead = new Point(head.x + 1, head.y);
             default -> newHead = new Point(head.x, head.y);
@@ -95,9 +95,9 @@ public class Snake {
     /**
      * Checks if the snake has collided with itself or the boundaries.
      */
-    public boolean checkCollision(int boardHeight, int boardWidth) {
+    public boolean checkCollision(int boardWidth, int boardHeight) {
         // Logic to check for collisions
-        return checkSelfCollision() || checkBoundaryCollision(boardHeight, boardWidth);
+        return checkSelfCollision() || checkBoundaryCollision(boardWidth, boardHeight);
     }
 
     private boolean checkSelfCollision() {
