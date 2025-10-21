@@ -9,8 +9,7 @@ import javax.swing.*;
 public class GamePanel extends JPanel {
 
     private static final int BOARD_WIDTH = 15;
-    private static final int BOARD_HEIGHT = 15;
-    private static final int CELL_SIZE = 64;
+    private static final double CELL_SIZE = 32*1.5;
 
     private final Snake snake;
     private final Food food;
@@ -22,7 +21,7 @@ public class GamePanel extends JPanel {
 
     ImageIcon deathIcon = new ImageIcon("assets/images/DeathIcon.png");
     Image image = deathIcon.getImage();
-    Image scaled = image.getScaledInstance(1000, 1000, Image.SCALE_SMOOTH); // width, height, scale type
+    Image scaled = image.getScaledInstance(10, 10, Image.SCALE_SMOOTH); // width, height, scale type
     ImageIcon scaledDeathIcon = new ImageIcon(scaled);
 
     /**
@@ -32,7 +31,7 @@ public class GamePanel extends JPanel {
 
     GamePanel(Color snakeColor) {
         // Constructor logic here
-        setSize(new Dimension(BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE));
+        setSize(new Dimension((int)Math.round(BOARD_WIDTH * CELL_SIZE), (int)Math.round(BOARD_WIDTH * CELL_SIZE)));
         setOpaque(false);
 
         setFocusable(true);
@@ -43,9 +42,9 @@ public class GamePanel extends JPanel {
         setupKeyBindings();
 
         // Initialize game objects
-        snake = new Snake(BOARD_WIDTH / 2, BOARD_HEIGHT / 2, BOARD_WIDTH, BOARD_HEIGHT,
+        snake = new Snake(BOARD_WIDTH / 2, BOARD_WIDTH / 2, BOARD_WIDTH, BOARD_WIDTH,
                 snakeColor);
-        food = new Food(BOARD_WIDTH, BOARD_HEIGHT);
+        food = new Food(BOARD_WIDTH, BOARD_WIDTH);
 
         // Set up game timer
         gameTimer = new Timer(150, e -> {
@@ -63,12 +62,12 @@ public class GamePanel extends JPanel {
         canMove = true;
         if (food.isEaten(snake)) {
             snake.grow();
-            food.respawn(BOARD_WIDTH, BOARD_HEIGHT, snake);
+            food.respawn(BOARD_WIDTH, BOARD_WIDTH, snake);
         } else {
             snake.move();
         }
 
-        if (snake.checkCollision(BOARD_HEIGHT, BOARD_WIDTH)) {
+        if (snake.checkCollision(BOARD_WIDTH, BOARD_WIDTH)) {
             isGameOver = true;
             gameTimer.stop();
 
@@ -106,15 +105,15 @@ public class GamePanel extends JPanel {
     private void drawSnake(Graphics2D g2d) {
         g2d.setColor(snake.getColor());
         for (Point segment : snake.getBody()) {
-            g2d.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+            g2d.fillRect((int)Math.round(segment.x * CELL_SIZE), (int)Math.round(segment.y * CELL_SIZE), (int)Math.round(CELL_SIZE), (int)Math.round(CELL_SIZE));
         }
     }
 
     private void drawFood(Graphics2D g2d) {
         g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
-                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
+                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4),
                 (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
-                CELL_SIZE * 3 / 4, CELL_SIZE * 3 / 4, null);
+                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);
     }
 
     private void setupKeyBindings() {

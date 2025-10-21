@@ -12,7 +12,7 @@ public final class GameFrame extends JFrame {
     private final JButton[] leftButtons = new JButton[4];
     private final JButton[] rightButtons = new JButton[4];
     private final JButton startButton = new JButton();
-    int[] currentSettings = { 0, 0, 0, 0, 0 }; // default settings
+    int[] currentSettings = { 0, 0, 0, 0, 0}; // default settings: gridsize, speed, food, game mode (and scale for gridsize)
     private Timer colorTimer;
     private float hue = 0f;
     private GamePanel gamePanel;
@@ -102,7 +102,7 @@ public final class GameFrame extends JFrame {
             rightButtons[i].setBounds(300, 30 + i * 75, 50, 50);
             rightButtons[i].addActionListener(
                     (e) -> {
-                        if (currentSettings[index] < 5) {
+                        if (currentSettings[index] < 3) {
                             currentSettings[index]++;
                             System.out.println("Setting " + index
                                     + " changed to " + currentSettings[index]); // Temporary
@@ -133,7 +133,7 @@ public final class GameFrame extends JFrame {
                     gamePanel = new GamePanel(selectedSnakeColor);
                     layers.add(gamePanel, Integer.valueOf(1));
                     gamePanel.requestFocusInWindow();
-                    setSize(976, 998);
+                    setSize((int)Math.round(32*15*1.5+16), (int)Math.round(32*15*1.5+38));
                     setLocationRelativeTo(null);
                     setContentPane(layers);
                 });
@@ -153,5 +153,25 @@ public final class GameFrame extends JFrame {
         settingsPanel.add(buttonColorPicker);
         buttonColorPicker.setBounds(115, 320, 150, 50);
 
+    }
+    public int[] getSettings() {
+        if (currentSettings[0] == 0) {
+            currentSettings[0] = 15;
+            currentSettings[4] = 15;
+        } else if (currentSettings[0] == 1) {
+            currentSettings[0] = 9;
+            currentSettings[4] = 15;
+        } else {
+            currentSettings[0] = 21;
+            currentSettings[4] = 15;
+        }
+        if (currentSettings[1] == 0) {
+            currentSettings[1] = 100;
+        } else if (currentSettings[1] == 1) {
+            currentSettings[1] = 150;
+        } else {
+            currentSettings[1] = 50;
+        }
+        return currentSettings;
     }
 }

@@ -18,18 +18,17 @@ public class Background extends JPanel {
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         // Draw each tile
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < tiles.length; i++) {
             BufferedImage f;
-            for (int j = 0; j < 15; j++) {
+            for (int j = 0; j < tiles.length; j++) {
                 if (i % 2 == 0 && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
                     f = tileList.get(tiles[i][j]);
                 } else {
                     f = color(0.85, 0.85, 0.85, tileList.get(tiles[i][j]));
                 }
-                int scale = 2;
-                int x = i * f.getWidth() * scale;
-                int y = j * f.getHeight() * scale;
-                g.drawImage(f, x, y, f.getWidth() * scale, f.getHeight() * scale, null);
+                double scale = 1.5;
+                g.drawImage(f, (int)Math.round(i * f.getWidth() * scale), (int)Math.round(j * f.getWidth() * scale),
+                 (int)Math.round(f.getWidth() * scale), (int)Math.round(f.getWidth() * scale), null);
             }
         }
     }
