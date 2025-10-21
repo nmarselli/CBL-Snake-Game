@@ -8,8 +8,10 @@ import javax.swing.*;
  */
 public class GamePanel extends JPanel {
 
-    private static final int BOARD_WIDTH = 15;
-    private static final double CELL_SIZE = 32*1.5;
+    private int[] finalSettings = new int[5];
+
+    private static int BOARD_WIDTH;
+    private static double CELL_SIZE;
 
     private final Snake snake;
     private final Food food;
@@ -29,17 +31,19 @@ public class GamePanel extends JPanel {
      * Initializes the snake and food objects, and sets up panel properties.
      */
 
-    GamePanel(Color snakeColor) {
+    GamePanel(Color snakeColor, int[] finalSettings) {
+        this.finalSettings = finalSettings;
+        BOARD_WIDTH = finalSettings[0];
+        CELL_SIZE = 32*finalSettings[4]/10;
         // Constructor logic here
         setSize(new Dimension((int)Math.round(BOARD_WIDTH * CELL_SIZE), (int)Math.round(BOARD_WIDTH * CELL_SIZE)));
         setOpaque(false);
-
         setFocusable(true);
-
         setLayout(null);
         setVisible(true);
         requestFocusInWindow();
         setupKeyBindings();
+        
 
         // Initialize game objects
         snake = new Snake(BOARD_WIDTH / 2, BOARD_WIDTH / 2, BOARD_WIDTH, BOARD_WIDTH,
@@ -47,7 +51,7 @@ public class GamePanel extends JPanel {
         food = new Food(BOARD_WIDTH, BOARD_WIDTH);
 
         // Set up game timer
-        gameTimer = new Timer(150, e -> {
+        gameTimer = new Timer(finalSettings[1], e -> {
             if (!isGameOver) {
                 gameLoop();
                 frame++;
@@ -111,7 +115,7 @@ public class GamePanel extends JPanel {
 
     private void drawFood(Graphics2D g2d) {
         g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
-                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4),
+                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
                 (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
                 (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);
     }

@@ -9,7 +9,8 @@ import javax.swing.*;
  */
 public class Background extends JPanel {
     private java.util.List<BufferedImage> tileList = new java.util.ArrayList<>();
-    int[][] tiles = new int[15][15];
+    private int[] finalSettings = new int[5];
+    int[][] tiles = new int[finalSettings[0]][finalSettings[0]];
 
     @Override
     protected void paintComponent(Graphics g0) {
@@ -26,9 +27,10 @@ public class Background extends JPanel {
                 } else {
                     f = color(0.85, 0.85, 0.85, tileList.get(tiles[i][j]));
                 }
-                double scale = 1.5;
-                g.drawImage(f, (int)Math.round(i * f.getWidth() * scale), (int)Math.round(j * f.getWidth() * scale),
-                 (int)Math.round(f.getWidth() * scale), (int)Math.round(f.getWidth() * scale), null);
+                g.drawImage(f, (int) Math.round(i * f.getWidth() * finalSettings[4] / 10),
+                        (int) Math.round(j * f.getWidth() * finalSettings[4] / 10),
+                        (int) Math.round(f.getWidth() * finalSettings[4] / 10),
+                        (int) Math.round(f.getWidth() * finalSettings[4] / 10), null);
             }
         }
     }
@@ -37,27 +39,30 @@ public class Background extends JPanel {
      * Sets up the background panel.
      * Calls to get the spritesheet and slices it into tiles.
      */
-    public Background() {
-        setSize(976, 998);
-            //Load spritesheet and create an object, slices it into tiles
-            SpriteSheet ss = new SpriteSheet(SpriteSheet.getPicture("assets/images/TileSet2.png"), 32);
-            // Adds all tiles to a list
-            tileList.clear();
-            for (int r = 0; r < ss.getRows(); r++) {
-                for (int c = 0; c < ss.getCols(); c++) {
-                    tileList.add(ss.get(c, r));
-                }
+    public Background(int[] finalSettings) {
+        this.finalSettings = finalSettings;
+        setSize((int) Math.round(32 * finalSettings[0] * finalSettings[4] / 10 + 16),
+                (int) Math.round(32 * finalSettings[0] * finalSettings[4] / 10 + 38));
+        // Load spritesheet and create an object, slices it into tiles
+        SpriteSheet ss = new SpriteSheet(SpriteSheet.getPicture("assets/images/TileSet2.png"), 32);
+        // Adds all tiles to a list
+        tileList.clear();
+        for (int r = 0; r < ss.getRows(); r++) {
+            for (int c = 0; c < ss.getCols(); c++) {
+                tileList.add(ss.get(c, r));
             }
-        //new Timer(100, e -> {repaint();setSize(976, 998);}).start();
+        }
+        tiles = new int[finalSettings[0]][finalSettings[0]];
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles.length; j++) {
                 if (i % 2 == 0 && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
                     tiles[i][j] = new Random().nextInt(16);
                 } else {
-                tiles[i][j] = new Random().nextInt(24);
+                    tiles[i][j] = new Random().nextInt(24);
                 }
             }
         }
+        System.out.println(tiles.length);
         this.repaint();
     }
 
