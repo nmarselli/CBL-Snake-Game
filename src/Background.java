@@ -44,7 +44,7 @@ public class Background extends JPanel {
         setSize((int) Math.round(32 * finalSettings[0] * finalSettings[4] / 10 + 16),
                 (int) Math.round(32 * finalSettings[0] * finalSettings[4] / 10 + 38));
         // Load spritesheet and create an object, slices it into tiles
-        SpriteSheet ss = new SpriteSheet(SpriteSheet.getPicture("assets/images/TileSet2.png"), 32);
+        SpriteSheet ss = new SpriteSheet(SpriteSheet.getPicture("assets/images/TileSet3.png"), 32);
         // Adds all tiles to a list
         tileList.clear();
         for (int r = 0; r < ss.getRows(); r++) {
@@ -55,10 +55,32 @@ public class Background extends JPanel {
         tiles = new int[finalSettings[0]][finalSettings[0]];
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles.length; j++) {
+                
                 if (i % 2 == 0 && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
                     tiles[i][j] = new Random().nextInt(16);
                 } else {
                     tiles[i][j] = new Random().nextInt(24);
+                }
+                if (i == 0) {
+                    tiles[i][j] = new Random().nextInt(40, 44);
+                } else if (i == tiles.length - 1) {
+                    tiles[i][j] = new Random().nextInt(32, 36);
+                } else if (j == 0) {
+                    tiles[i][j] = new Random().nextInt(44, 48);
+                } else if (j == tiles.length - 1) {
+                    tiles[i][j] = new Random().nextInt(36, 40);
+                }
+                if (i == 0 && j == 0) {
+                    tiles[i][j] = 56;
+                }
+                if (i == 0 && j == tiles.length - 1) {
+                    tiles[i][j] = 59;
+                }
+                if (i == tiles.length - 1 && j == tiles.length - 1) {
+                    tiles[i][j] = 58;
+                }
+                if (i == tiles.length - 1 && j == 0) {
+                    tiles[i][j] = 57;
                 }
             }
         }

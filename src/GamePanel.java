@@ -114,10 +114,23 @@ public class GamePanel extends JPanel {
     }
 
     private void drawFood(Graphics2D g2d) {
-        g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
+        if (finalSettings[2] == 0) {
+            g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
                 (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
                 (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
-                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);
+                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);  
+        } else  if (finalSettings[2] == 1) {
+            g2d.drawImage(SpriteSheet.getPicture("assets/images/GoldenApple.png"),
+                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
+                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
+                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);  
+        } else  if (finalSettings[2] == 2) {
+            g2d.drawImage(SpriteSheet.getPicture("assets/images/CrystalApple.png"),
+                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
+                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
+                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);  
+        }
+
     }
 
     private void setupKeyBindings() {
