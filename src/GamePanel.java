@@ -22,7 +22,7 @@ public class GamePanel extends JPanel {
 
     ImageIcon deathIcon = new ImageIcon("assets/images/DeathIcon.png");
     Image image = deathIcon.getImage();
-    Image scaled = image.getScaledInstance(1000, 1000, Image.SCALE_SMOOTH); // width, height, scale type
+    Image scaled = image.getScaledInstance(10, 10, Image.SCALE_SMOOTH); // width, height, scale type
     ImageIcon scaledDeathIcon = new ImageIcon(scaled);
 
     /**
