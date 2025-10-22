@@ -12,7 +12,7 @@ public final class GameFrame extends JFrame {
     private final JButton[] leftButtons = new JButton[4];
     private final JButton[] rightButtons = new JButton[4];
     private final JButton startButton = new JButton();
-    int[] currentSettings = { 0, 0, 0, 0, 0 }; // default settings
+    int[] currentSettings = { 0, 0, 0, 0, 0}; // default settings: gridsize, speed, food, game mode (and scale for gridsize)
     private Timer colorTimer;
     private float hue = 0f;
     private GamePanel gamePanel;
@@ -32,7 +32,7 @@ public final class GameFrame extends JFrame {
         setResizable(false);
         setSize(400, 600); // size first
         setLocationRelativeTo(null); // then center on screen
-        getContentPane().setBackground(Color.gray); // background color
+        getContentPane().setBackground(Color.green); // background color
 
         // 3. Layout manager
         setLayout(null);
@@ -102,7 +102,7 @@ public final class GameFrame extends JFrame {
             rightButtons[i].setBounds(300, 30 + i * 75, 50, 50);
             rightButtons[i].addActionListener(
                     (e) -> {
-                        if (currentSettings[index] < 5) {
+                        if (currentSettings[index] < 2) {
                             currentSettings[index]++;
                             System.out.println("Setting " + index
                                     + " changed to " + currentSettings[index]); // Temporary
@@ -129,11 +129,11 @@ public final class GameFrame extends JFrame {
                     settingsPanel.setVisible(false);
 
                     JLayeredPane layers = new JLayeredPane();
-                    layers.add(new Background(), Integer.valueOf(0));
-                    gamePanel = new GamePanel(selectedSnakeColor);
-                    layers.add(gamePanel, Integer.valueOf(1));
-                    gamePanel.requestFocusInWindow();
-                    setSize(976, 998);
+                    currentSettings = getSettings();
+                    layers.add(new Background(currentSettings), Integer.valueOf(0));
+                    layers.add(new GamePanel(selectedSnakeColor, currentSettings), Integer.valueOf(1));
+                    setSize((int)Math.round(32*currentSettings[0]*currentSettings[4]/10+16), 
+                        (int)Math.round(32*currentSettings[0]*currentSettings[4]/10+38));
                     setLocationRelativeTo(null);
                     setContentPane(layers);
                 });
@@ -153,5 +153,25 @@ public final class GameFrame extends JFrame {
         settingsPanel.add(buttonColorPicker);
         buttonColorPicker.setBounds(115, 320, 150, 50);
 
+    }
+    public int[] getSettings() {
+        if (currentSettings[0] == 0) { // grid size
+            currentSettings[0] = 15;
+            currentSettings[4] = 15; // scale *10 <-- breakes when not multiple of 5
+        } else if (currentSettings[0] == 1) {
+            currentSettings[0] = 9;
+            currentSettings[4] = 20;
+        } else {
+            currentSettings[0] = 21;
+            currentSettings[4] = 10;
+        }
+        if (currentSettings[1] == 0) { // speed
+            currentSettings[1] = 150;
+        } else if (currentSettings[1] == 1) {
+            currentSettings[1] = 100;
+        } else {
+            currentSettings[1] = 200;
+        }
+        return currentSettings;
     }
 }

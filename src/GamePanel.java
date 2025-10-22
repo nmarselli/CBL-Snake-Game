@@ -8,9 +8,10 @@ import javax.swing.*;
  */
 public class GamePanel extends JPanel {
 
-    private static final int BOARD_WIDTH = 15;
-    private static final int BOARD_HEIGHT = 15;
-    private static final int CELL_SIZE = 64;
+    private int[] finalSettings = new int[5];
+
+    private static int BOARD_WIDTH;
+    private static double CELL_SIZE;
 
     private final Snake snake;
     private final Food food;
@@ -30,25 +31,27 @@ public class GamePanel extends JPanel {
      * Initializes the snake and food objects, and sets up panel properties.
      */
 
-    GamePanel(Color snakeColor) {
+    GamePanel(Color snakeColor, int[] finalSettings) {
+        this.finalSettings = finalSettings;
+        BOARD_WIDTH = finalSettings[0];
+        CELL_SIZE = 32*finalSettings[4]/10;
         // Constructor logic here
-        setSize(new Dimension(BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE));
+        setSize(new Dimension((int)Math.round(BOARD_WIDTH * CELL_SIZE), (int)Math.round(BOARD_WIDTH * CELL_SIZE)));
         setOpaque(false);
-
         setFocusable(true);
-
         setLayout(null);
         setVisible(true);
         requestFocusInWindow();
         setupKeyBindings();
+        
 
         // Initialize game objects
-        snake = new Snake(BOARD_WIDTH / 2, BOARD_HEIGHT / 2, BOARD_WIDTH, BOARD_HEIGHT,
+        snake = new Snake(BOARD_WIDTH / 2, BOARD_WIDTH / 2, BOARD_WIDTH, BOARD_WIDTH,
                 snakeColor);
-        food = new Food(BOARD_WIDTH, BOARD_HEIGHT);
+        food = new Food(BOARD_WIDTH, BOARD_WIDTH);
 
         // Set up game timer
-        gameTimer = new Timer(150, e -> {
+        gameTimer = new Timer(finalSettings[1], e -> {
             if (!isGameOver) {
                 gameLoop();
                 frame++;
@@ -63,12 +66,12 @@ public class GamePanel extends JPanel {
         canMove = true;
         if (food.isEaten(snake)) {
             snake.grow();
-            food.respawn(BOARD_WIDTH, BOARD_HEIGHT, snake);
+            food.respawn(BOARD_WIDTH, BOARD_WIDTH, snake);
         } else {
             snake.move();
         }
 
-        if (snake.checkCollision(BOARD_HEIGHT, BOARD_WIDTH)) {
+        if (snake.checkCollision(BOARD_WIDTH, BOARD_WIDTH)) {
             isGameOver = true;
             gameTimer.stop();
 
@@ -106,15 +109,28 @@ public class GamePanel extends JPanel {
     private void drawSnake(Graphics2D g2d) {
         g2d.setColor(snake.getColor());
         for (Point segment : snake.getBody()) {
-            g2d.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+            g2d.fillRect((int)Math.round(segment.x * CELL_SIZE), (int)Math.round(segment.y * CELL_SIZE), (int)Math.round(CELL_SIZE), (int)Math.round(CELL_SIZE));
         }
     }
 
     private void drawFood(Graphics2D g2d) {
-        g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
-                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
+        if (finalSettings[2] == 0) {
+            g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
+                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
                 (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
-                CELL_SIZE * 3 / 4, CELL_SIZE * 3 / 4, null);
+                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);  
+        } else  if (finalSettings[2] == 1) {
+            g2d.drawImage(SpriteSheet.getPicture("assets/images/GoldenApple.png"),
+                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
+                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
+                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);  
+        } else  if (finalSettings[2] == 2) {
+            g2d.drawImage(SpriteSheet.getPicture("assets/images/CrystalApple.png"),
+                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
+                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
+                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);  
+        }
+
     }
 
     private void setupKeyBindings() {
