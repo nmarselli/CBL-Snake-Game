@@ -8,8 +8,7 @@ import javax.swing.*;
  */
 public class GamePanel extends JPanel {
 
-    private int[] finalSettings = new int[5];
-
+    private int[] finalSettings = new int[4];
     private static int BOARD_WIDTH;
     private static double CELL_SIZE;
 
@@ -23,27 +22,26 @@ public class GamePanel extends JPanel {
 
     ImageIcon deathIcon = new ImageIcon("assets/images/DeathIcon.png");
     Image image = deathIcon.getImage();
-    Image scaled = image.getScaledInstance(10, 10, Image.SCALE_SMOOTH); // width, height, scale type
+    Image scaled = image.getScaledInstance(500, 500, Image.SCALE_SMOOTH); 
     ImageIcon scaledDeathIcon = new ImageIcon(scaled);
 
     /**
      * Constructs a new GamePanel,
      * Initializes the snake and food objects, and sets up panel properties.
      */
-
     GamePanel(Color snakeColor, int[] finalSettings) {
         this.finalSettings = finalSettings;
         BOARD_WIDTH = finalSettings[0];
-        CELL_SIZE = 32*finalSettings[4]/10;
+        CELL_SIZE = 32 * finalSettings[3] / 10;
         // Constructor logic here
-        setSize(new Dimension((int)Math.round(BOARD_WIDTH * CELL_SIZE), (int)Math.round(BOARD_WIDTH * CELL_SIZE)));
+        setSize(new Dimension((int) Math.round(BOARD_WIDTH * CELL_SIZE),
+                (int) Math.round(BOARD_WIDTH * CELL_SIZE)));
         setOpaque(false);
         setFocusable(true);
         setLayout(null);
         setVisible(true);
         requestFocusInWindow();
         setupKeyBindings();
-        
 
         // Initialize game objects
         snake = new Snake(BOARD_WIDTH / 2, BOARD_WIDTH / 2, BOARD_WIDTH, BOARD_WIDTH,
@@ -57,7 +55,6 @@ public class GamePanel extends JPanel {
                 frame++;
             }
         });
-
         gameTimer.start();
     }
 
@@ -75,11 +72,11 @@ public class GamePanel extends JPanel {
             isGameOver = true;
             gameTimer.stop();
 
-
             int choice = JOptionPane.showConfirmDialog(this,
-                "Game Over! Score: " + (snake.getBody().size() - 3) + "\nPlay again?", "Game Over",
-                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, scaledDeathIcon
-            );
+                    "Game Over! Score: " + (snake.getBody().size() - 3)
+                            + "\nPlay again?",
+                    "Game Over",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, scaledDeathIcon);
             if (choice == JOptionPane.YES_OPTION) {
                 Window window = SwingUtilities.getWindowAncestor(this);
                 window.dispose();
@@ -98,37 +95,44 @@ public class GamePanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-
         drawFood(g2d);
-
         drawSnake(g2d);
-
         g2d.dispose();
     }
 
     private void drawSnake(Graphics2D g2d) {
-        g2d.setColor(snake.getColor());
+        Color color = snake.getColor();
         for (Point segment : snake.getBody()) {
-            g2d.fillRect((int)Math.round(segment.x * CELL_SIZE), (int)Math.round(segment.y * CELL_SIZE), (int)Math.round(CELL_SIZE), (int)Math.round(CELL_SIZE));
+            color.darker();
+            g2d.setColor(color);
+            g2d.fillRect((int) Math.round(segment.x * CELL_SIZE),
+                    (int) Math.round(segment.y * CELL_SIZE),
+                    (int) Math.round(CELL_SIZE), (int) Math.round(CELL_SIZE));
         }
     }
 
     private void drawFood(Graphics2D g2d) {
-        if (finalSettings[2] == 0) {
-            g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
-                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
-                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
-                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);  
-        } else  if (finalSettings[2] == 1) {
-            g2d.drawImage(SpriteSheet.getPicture("assets/images/GoldenApple.png"),
-                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
-                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
-                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);  
-        } else  if (finalSettings[2] == 2) {
-            g2d.drawImage(SpriteSheet.getPicture("assets/images/CrystalApple.png"),
-                (int) Math.round(food.getPosition().x * CELL_SIZE + Math.sin(frame * Math.PI/10) / 4+6),
-                (int) Math.round(food.getPosition().y * CELL_SIZE + Math.sin(frame * Math.PI/10) * 4),
-                (int)Math.round(CELL_SIZE) * 3 / 4, (int)Math.round(CELL_SIZE) * 3 / 4, null);  
+        switch (finalSettings[2]) {
+            case 0 -> g2d.drawImage(SpriteSheet.getPicture("assets/images/Apple.png"),
+                    (int) Math.round(food.getPosition().x
+                        * CELL_SIZE + Math.sin(frame * Math.PI / 10) / 4 + 6),
+                    (int) Math.round(food.getPosition().y
+                        * CELL_SIZE + Math.sin(frame * Math.PI / 10) * 4),
+                    (int) Math.round(CELL_SIZE) * 3 / 4, (int) Math.round(CELL_SIZE) * 3 / 4, null);
+            case 1 -> g2d.drawImage(SpriteSheet.getPicture("assets/images/GoldenApple.png"),
+                        (int) Math.round(food.getPosition().x
+                        * CELL_SIZE + Math.sin(frame * Math.PI / 10) / 4 + 6),
+                    (int) Math.round(food.getPosition().y
+                        * CELL_SIZE + Math.sin(frame * Math.PI / 10) * 4),
+                    (int) Math.round(CELL_SIZE) * 3 / 4, (int) Math.round(CELL_SIZE) * 3 / 4, null);
+            case 2 -> g2d.drawImage(SpriteSheet.getPicture("assets/images/CrystalApple.png"),
+                    (int) Math.round(food.getPosition().x
+                        * CELL_SIZE + Math.sin(frame * Math.PI / 10) / 4 + 6),
+                    (int) Math.round(food.getPosition().y
+                    * CELL_SIZE + Math.sin(frame * Math.PI / 10) * 4),
+                    (int) Math.round(CELL_SIZE) * 3 / 4, (int) Math.round(CELL_SIZE) * 3 / 4, null);
+            default -> {
+            }
         }
 
     }

@@ -49,7 +49,6 @@ public class Snake {
 
     }
     
-
     /**
      * Grows the snake by adding a new segment at its head.
      */
@@ -66,10 +65,7 @@ public class Snake {
             case RIGHT -> newHead = new Point(head.x + 1, head.y);
             default -> newHead = new Point(head.x, head.y);
         }
-        
         body.add(0, newHead);
-
-
     }
 
     /**

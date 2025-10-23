@@ -64,6 +64,7 @@ public class SpriteSheet {
         }
         return list;
     }
+
     /**
      * Get image sheet from path.
      */
@@ -73,7 +74,7 @@ public class SpriteSheet {
             BufferedImage sheet1 = ImageIO.read(p.toFile());
             return sheet1;
         } catch (java.io.IOException e) {
-            e.printStackTrace();
+            System.err.println("Error loading image: " + e.getMessage());
             return null;
         }
     }

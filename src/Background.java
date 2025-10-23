@@ -27,10 +27,10 @@ public class Background extends JPanel {
                 } else {
                     f = color(0.85, 0.85, 0.85, tileList.get(tiles[i][j]));
                 }
-                g.drawImage(f, (int) Math.round(i * f.getWidth() * finalSettings[4] / 10),
-                        (int) Math.round(j * f.getWidth() * finalSettings[4] / 10),
-                        (int) Math.round(f.getWidth() * finalSettings[4] / 10),
-                        (int) Math.round(f.getWidth() * finalSettings[4] / 10), null);
+                g.drawImage(f, (int) Math.round(i * f.getWidth() * finalSettings[3] / 10),
+                        (int) Math.round(j * f.getWidth() * finalSettings[3] / 10),
+                        (int) Math.round(f.getWidth() * finalSettings[3] / 10),
+                        (int) Math.round(f.getWidth() * finalSettings[3] / 10), null);
             }
         }
     }
@@ -41,8 +41,8 @@ public class Background extends JPanel {
      */
     public Background(int[] finalSettings) {
         this.finalSettings = finalSettings;
-        setSize((int) Math.round(32 * finalSettings[0] * finalSettings[4] / 10 + 16),
-                (int) Math.round(32 * finalSettings[0] * finalSettings[4] / 10 + 38));
+        setSize((int) Math.round(32 * finalSettings[0] * finalSettings[3] / 10 + 16),
+                (int) Math.round(32 * finalSettings[0] * finalSettings[3] / 10 + 38));
         // Load spritesheet and create an object, slices it into tiles
         SpriteSheet ss = new SpriteSheet(SpriteSheet.getPicture("assets/images/TileSet3.png"), 32);
         // Adds all tiles to a list
@@ -84,7 +84,6 @@ public class Background extends JPanel {
                 }
             }
         }
-        System.out.println(tiles.length);
         this.repaint();
     }
 

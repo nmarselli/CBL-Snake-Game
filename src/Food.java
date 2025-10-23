@@ -18,7 +18,6 @@ public class Food {
         this.position = generateRandomPosition(boardWidth, boardLength);
     }
 
-
     /*
      * Generates a new random position for the food on the board.
      */
@@ -29,14 +28,12 @@ public class Food {
         return new Point(x, y);
     }
 
-
     /**
      * Respawns food at new random position, does not allow food to spawn on snake body.
      */
     public void respawn(int boardWidth, int boardLength, Snake snake) {
         Point newPosition;
         boolean validPosition;
-
 
         do {
             newPosition = generateRandomPosition(boardWidth, boardLength);
@@ -52,7 +49,6 @@ public class Food {
         } while (!validPosition);
 
         this.position = newPosition;
-
     }
 
     public boolean isEaten(Snake snake) {
@@ -60,7 +56,6 @@ public class Food {
     }
 
     //Getters and Setters
-
     public Point getPosition() {
         return position;
     }
@@ -68,6 +63,4 @@ public class Food {
     public void setPosition(Point position) {
         this.position = position;
     }
-
-
 }
